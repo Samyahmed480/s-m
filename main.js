@@ -3,8 +3,8 @@ const metaTag = document.querySelector('meta[name="client_code"]');
 const clientCode = metaTag ? metaTag.getAttribute('content') : null;
 
 // 2. إعداد روابط التحويل (غيرها بروابطك الحقيقية)
-const externalWebsite = "https://samyahmed480.github.io/su-s/"; // لو الاشتراك انتهى
-const wrongCodePage = "https://samyahmed480.github.io/su-s/"; // لو الكود مسروق أو مش موجود
+const externalWebsite = "https://samyahmed480.github.io/su-s"; // لو الاشتراك انتهى
+const wrongCodePage = "https://samyahmed480.github.io/su-s"; // لو الكود مسروق أو مش موجود
 
 // 3. رابط الـ API بتاع شيت جوجل الخاص بيك
 const googleSheetURL = "https://script.google.com/macros/s/AKfycbwjmU9Np1K-B2bUmsdYAjrkuGbKsMYPnfxOVdl29MqbEcd7RtURRvL2frx1Vq2b4yLJqQ/exec";
