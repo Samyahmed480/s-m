@@ -1,40 +1,36 @@
-// 1. استخراج الكود من الميتا تاج
-const metaTag = document.querySelector('meta[name="client_code"]');
-const clientCode = metaTag ? metaTag.getAttribute('content') : null;
-
-// 2. إعداد روابط التحويل (غيرها بروابطك الحقيقية)
-const externalWebsite = "https://samyahmed480.github.io/su-s"; // لو الاشتراك انتهى
-const wrongCodePage = "https://samyahmed480.github.io/su-s"; // لو الكود مسروق أو مش موجود
-
-// 3. رابط الـ API بتاع شيت جوجل الخاص بيك
-const googleSheetURL = "https://script.google.com/macros/s/AKfycbwjmU9Np1K-B2bUmsdYAjrkuGbKsMYPnfxOVdl29MqbEcd7RtURRvL2frx1Vq2b4yLJqQ/exec";
-
-// 4. تنفيذ الفحص
-if (!clientCode) {
-    // مفيش ميتا تاج من الأساس
-    window.location.replace(wrongCodePage);
+// 1. التأكد إننا مش في صفحة الدعم (لمنع التكرار اللانهائي)
+if (window.location.href.includes("samyahmed480.github.io/su-s")) {
+    console.log("نحن الآن في صفحة الدعم، تم إيقاف الفحص.");
 } else {
-    // جلب البيانات من جوجل
-    fetch(googleSheetURL)
-        .then(response => response.json())
-        .then(data => {
-            
-            if (!data.hasOwnProperty(clientCode)) {
-                // الكود مش موجود في شيت الإكسيل أصلاً
-                window.location.replace(wrongCodePage);
-                
-            } else if (data[clientCode].status === "2") {
-                // الكود موجود بس حالته 2 (موقوف/منتهي)
-                window.location.replace(externalWebsite);
-                
-            } else if (data[clientCode].status === "1") {
-                // الكود موجود وحالته 1 (شغال)
-                console.log("License is active.");
-                // مش هنعمل أي تحويل والموقع هيشتغل طبيعي
-            }
-            
-        })
-        .catch(error => {
-            console.error("Error checking license:", error);
-        });
+    // 2. استخراج الكود من الميتا تاج
+    const metaTag = document.querySelector('meta[name="client_code"]');
+    const clientCode = metaTag ? metaTag.getAttribute('content') : null;
+
+    // 3. رابط صفحة الدعم الخاص بك
+    const supportPage = "https://samyahmed480.github.io/su-s/"; 
+    
+    // 4. رابط جوجل شيت بتاعك
+    const googleSheetURL = "https://script.google.com/macros/s/AKfycbwjmU9Np1K-B2bUmsdYAjrkuGbKsMYPnfxOVdl29MqbEcd7RtURRvL2frx1Vq2b4yLJqQ/exec";
+
+    // 5. الفحص
+    if (!clientCode) {
+        // لو مفيش كود في الصفحة، حوله للدعم
+        window.location.replace(supportPage);
+    } else {
+        fetch(googleSheetURL)
+            .then(response => response.json())
+            .then(data => {
+                // لو الكود مش موجود في الشيت أو حالته 2 (موقوف)
+                if (!data.hasOwnProperty(clientCode) || data[clientCode].status === "2") {
+                    window.location.replace(supportPage);
+                } 
+                // لو الكود حالته 1 (شغال)
+                else if (data[clientCode].status === "1") {
+                    console.log("رخصة الموقع فعالة.");
+                }
+            })
+            .catch(error => {
+                console.error("خطأ في الاتصال بالخادم:", error);
+            });
+    }
 }
